@@ -1,0 +1,91 @@
+{
+    "name": "ro-smartstore",
+    "version": "1.0.0",
+    "description": "RO - نظام إدارة المخازن",
+    "author": "Your Name",
+    "main": "public/electron.js",
+    "homepage": "./",
+    "scripts": {
+        "start": "npm start --prefix frontend",
+        "build": "npm run build --prefix frontend",
+        "electron": "electron .",
+        "electron-dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && cross-env ELECTRON_START_URL=http://localhost:3000 electron .\"",
+        "dist": "npm run build && electron-builder",
+        "dist:win": "npm run build && electron-builder --win",
+        "dist:mac": "npm run build && electron-builder --mac",
+        "dist:linux": "npm run build && electron-builder --linux"
+    },
+    "build": {
+        "appId": "com.ro.smartstore",
+        "productName": "RO",
+        "directories": {
+            "buildResources": "electron/assets",
+            "output": "dist"
+        },
+        "files": [
+            "frontend/build/**/*",
+            "public/electron.js",
+            "electron/**/*",
+            "backend/**/*",
+            "node_modules/**/*"
+        ],
+        "win": {
+            "certificateFile": "certificate.pfx",
+            "certificatePassword": "123456",
+            "target": [
+                {
+                    "target": "nsis",
+                    "arch": [
+                        "x64",
+                        "ia32"
+                    ]
+                }
+            ],
+            "icon": "electron/assets/icon.ico"
+        },
+        "nsis": {
+            "oneClick": false,
+            "allowToChangeInstallationDirectory": true,
+            "installerIcon": "electron/assets/icon.ico",
+            "uninstallerIcon": "electron/assets/icon.ico",
+            "installerHeader": "electron/assets/installerHeader.bmp",
+            "installerHeaderIcon": "electron/assets/icon.ico",
+            "installerSidebar": "electron/assets/installerSidebar.bmp",
+            "createDesktopShortcut": true,
+            "createStartMenuShortcut": true,
+            "shortcutName": "RO",
+            "runAfterFinish": true,
+            "uninstallDisplayName": "RO - نظام إدارة المخازن"
+        },
+        "mac": {
+            "category": "public.app-category.business",
+            "target": [
+                "dmg",
+                "zip"
+            ],
+            "icon": "electron/assets/icon.icns"
+        },
+        "linux": {
+            "target": [
+                "AppImage",
+                "deb"
+            ],
+            "icon": "electron/assets/icons",
+            "category": "Office"
+        }
+    },
+    "dependencies": {
+        "chart.js": "^4.4.0",
+        "react": "^18.2.0",
+        "react-chartjs-2": "^5.2.0",
+        "react-dom": "^18.2.0",
+        "react-scripts": "5.0.1"
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.0",
+        "cross-env": "^7.0.3",
+        "electron": "^28.3.3",
+        "electron-builder": "^24.9.0",
+        "wait-on": "^7.2.0"
+    }
+}
