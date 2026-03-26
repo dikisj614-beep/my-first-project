@@ -6,10 +6,9 @@
     "main": "public/electron.js",
     "homepage": "./",
     "scripts": {
-        "start": "npm start --prefix frontend",
-        "build": "npm run build --prefix frontend",
+        "start": "react-scripts start",
+        "build": "react-scripts build",
         "electron": "electron .",
-        "electron-dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && cross-env ELECTRON_START_URL=http://localhost:3000 electron .\"",
         "dist": "npm run build && electron-builder",
         "dist:win": "npm run build && electron-builder --win",
         "dist:mac": "npm run build && electron-builder --mac",
@@ -23,7 +22,7 @@
             "output": "dist"
         },
         "files": [
-            "frontend/build/**/*",
+            "build/**/*",
             "public/electron.js",
             "electron/**/*",
             "backend/**/*",
