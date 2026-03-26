@@ -3,15 +3,13 @@ name: Build RO Application
 on:
   push:
     branches:
-      - main # سيعمل البناء عند رفع الكود لفرع main
+      - main 
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
-        # سيقوم GitHub بتشغيل 3 سيرفرات في نفس الوقت (ويندوز، ماك، لينكس)
         os: [windows-latest, macos-latest, ubuntu-latest]
 
     steps:
@@ -24,11 +22,10 @@ jobs:
           node-version: 18
 
       - name: Install Dependencies
-        # تم حذف كلمة cd frontend لأن ملفاتك بالخارج مباشرة
+        # حذفنا cd frontend لأن ملفاتك بالخارج
         run: npm install
 
       - name: Build App
-        # تم تبسيط الأوامر لتعمل في المجلد الرئيسي مباشرة
         run: |
           npm run build --if-present
           npm run dist
@@ -38,7 +35,7 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
 
-      - name: Upload Artifacts (النسخ الجاهزة)
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: RO-Build-${{ matrix.os }}
