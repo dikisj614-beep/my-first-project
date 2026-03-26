@@ -1,0 +1,49 @@
+name: Build RO Application
+
+on:
+  push:
+    branches:
+      - main # سيعمل البناء عند رفع الكود لفرع main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        # سيقوم GitHub بتشغيل 3 سيرفرات في نفس الوقت (ويندوز، ماك، لينكس)
+        os: [windows-latest, macos-latest, ubuntu-latest]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Dependencies (Root & Frontend)
+        run: |
+          npm install
+          cd frontend && npm install
+
+      - name: Build React Frontend
+        run: |
+          cd frontend && npm run build
+
+      - name: Build Electron App
+        run: npm run dist
+        env:
+          # هذه المتغيرات سنضيفها لـ GitHub لتوقيع نسخة الويندوز
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          # ملاحظة لنسخة الماك: ستحتاج لشهادة Apple لتجنب التحذيرات، حالياً سيبنيها بدون توقيع
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+
+      - name: Upload Artifacts (النسخ الجاهزة)
+        uses: actions/upload-artifact@v4
+        with:
+          name: RO-Build-${{ matrix.os }}
+          path: dist/*.{exe,dmg,AppImage,deb,zip}
