@@ -23,22 +23,18 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install Dependencies (Root & Frontend)
-        run: |
-          npm install
-          cd frontend && npm install
+      - name: Install Dependencies
+        # تم حذف كلمة cd frontend لأن ملفاتك بالخارج مباشرة
+        run: npm install
 
-      - name: Build React Frontend
+      - name: Build App
+        # تم تبسيط الأوامر لتعمل في المجلد الرئيسي مباشرة
         run: |
-          cd frontend && npm run build
-
-      - name: Build Electron App
-        run: npm run dist
+          npm run build --if-present
+          npm run dist
         env:
-          # هذه المتغيرات سنضيفها لـ GitHub لتوقيع نسخة الويندوز
           CSC_LINK: ${{ secrets.CSC_LINK }}
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-          # ملاحظة لنسخة الماك: ستحتاج لشهادة Apple لتجنب التحذيرات، حالياً سيبنيها بدون توقيع
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
 
